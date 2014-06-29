@@ -1,0 +1,99 @@
+;
+; Windows USB CDC ACM Setup File
+; Copyright (c) 2000 Microsoft Corporation
+; Copyright (C) 2007 Microchip Technology Inc.
+;
+; VID/PID (Voti, lab use only) added for USBoLo
+;	mh/20130823	changed VID/PID and added signing for AVT-GmbH
+;	mh/20130823	added VID/PID for phg Admitto
+;	mh/20130824	removed VID/PID of Voti
+;	mh/20130830	some corrections according http://support.microsoft.com/kb/837637
+;		and http://msdn.microsoft.com/en-us/library/ff547502(VS.85).aspx
+;	mh/20140629	added RFIDler-LF VID/PID
+;
+;	AVT_USBserial.CDF	for signing	http://msdn.microsoft.com/en-us/library/windows/hardware/ff548301(v=vs.85).aspx
+;		makecat -v AVT_USBserial.cdf
+;		signtool sign /a /t http://timestamp.verisign.com/scripts/timstamp.dll AVT_USBserial.cat
+;
+[Version] 
+Signature="$Windows NT$" 
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318} 
+Provider=%MFGNAME% 
+;LayoutFile=layout.inf
+CatalogFile=%MFGFILENAME%.cat
+DriverVer=06/28/2014,5.1.2600.1309
+;
+[Manufacturer] 
+%MFGNAME%=DeviceList, NTamd64
+;
+[DestinationDirs]
+;;FakeModemCopyFileSection=12
+DefaultDestDir=12 
+;
+;
+[USBCDC.NT] 
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection  
+[USBCDC.NT.Services] 
+include=mdmcpq.inf
+AddService=usbser, 0x00000000, LowerFilter_Service_Inst 
+[USBCDC.NT.HW]
+include=mdmcpq.inf
+AddReg=LowerFilterAddReg
+;
+;
+[SourceDisksFiles]
+;	section must exist (even if empty)
+[SourceDisksNames]
+;	section must exist (even if empty)
+;
+;
+;------------------------------------------------------------------------------
+;  Vendor and Product ID Definitions
+;------------------------------------------------------------------------------
+; When developing your USB device, the VID and PID used in the PC side
+; application program and the firmware on the microcontroller must match.
+; Modify the below line to use your VID and PID.  Use the format as shown below.
+; Note: One INF file can be used for multiple devices with different VID and PIDs.
+; For each supported device, append ",USB\VID_xxxx&PID_yyyy" to the end of the line.
+;------------------------------------------------------------------------------
+;	VID_04D8	Microchip
+;	&PID_000A	CDC demo
+;	&PID_FF0B	Sprut (Bootloader)
+;	&PID_FE28	phg Admitto USB-CDC
+;	VID_16C0	Voti
+;	&PID_03EB	(lab use only) USBoLo
+;	VID_1D50&PID_6098	RFIDler-LF
+[DeviceList]
+%DESCRIPTION%=USBCDC,USB\VID_04D8&PID_000A,USB\VID_04D8&PID_0205,USB\VID_04D8&PID_00DF&MI_00,USB\VID_04D8&PID_0057&MI_01,USB\VID_04D8&PID_006E&MI_01,USB\VID_04D8&PID_0208&MI_00,USB\VID_04D8&PID_0208&MI_02
+%USBOLO%=USBCDC,USB\VID_16C0&PID_03EB
+%SPRUTBOLO%=USBCDC,USB\VID_04D8&PID_FF0B
+%PHGADMITTO%=USBCDC,USB\VID_04D8&PID_FE28
+%RFIDLER%=USBCDC,USB\VID_1D50&PID_6098
+;
+[DeviceList.NTamd64] 
+%DESCRIPTION%=USBCDC,	USB\VID_04D8&PID_000A, USB\VID_04D8&PID_0205, USB\VID_04D8&PID_00DF&MI_00, USB\VID_04D8&PID_0057&MI_01, USB\VID_04D8&PID_006E&MI_01, USB\VID_04D8&PID_0208&MI_00, USB\VID_04D8&PID_0208&MI_02
+%USBOLO%=USBCDC,		USB\VID_16C0&PID_03EB
+%SPRUTBOLO%=USBCDC,		USB\VID_04D8&PID_FF0B
+%PHGADMITTO%=USBCDC,	USB\VID_04D8&PID_FE28
+%RFIDLER%=USBCDC,		USB\VID_1D50&PID_6098
+;
+;
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+;Modify these strings to customize your device
+;------------------------------------------------------------------------------
+[Strings]
+MFGFILENAME="AVT_USBserial"
+DRIVERFILENAME ="usbser"
+MFGNAME="AVT Alarm- und Video-Technik GmbH"
+INSTDISK="AVT-GmbH - Installation Disc"
+DESCRIPTION="USB Serial Port"
+SERVICE="USB RS-232 Emulation Driver"
+DESCAVT="AVT CRIuni3 USB Serial Port"
+USBOLO="USBoLo USB Serial Port"
+SPRUTBOLO="Sprut USB Serial Port"
+PHGADMITTO="phg Admitto USB Serial Port"
+RFIDLER="RFIDler-LF USB Serial Port"
